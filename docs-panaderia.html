@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Análisis del Sistema TuPedido - Gestión integral para panadería artesanal">
+  <title>Análisis: Sistema TuPedido | Juanma Aguirre</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        fontFamily: {
+          inter: ['Inter', 'sans-serif'],
+          poppins: ['Poppins', 'sans-serif']
+        },
+        extend: {
+          colors: {
+            primary: '#2563EB',
+            secondary: '#7C3AED',
+            accent: '#06B6D4',
+            dark: '#0F172A',
+            'dark-light': '#1E293B'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.8s ease-out forwards',
+            'slide-up': 'slideUp 0.8s ease-out forwards',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .analysis-section {
+      scroll-margin-top: 100px;
+    }
+    
+    .module-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .module-card:hover {
+      border-color: rgba(6, 182, 212, 0.3);
+      transform: translateY(-5px);
+    }
+    
+    .tab-button {
+      transition: all 0.3s ease;
+    }
+    
+    .tab-button.active {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: #06B6D4;
+    }
+    
+    .req-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin: 2px;
+    }
+    
+    .req-functional {
+      background: rgba(6, 182, 212, 0.2);
+      color: #06B6D4;
+    }
+    
+    .req-non-functional {
+      background: rgba(124, 58, 237, 0.2);
+      color: #7C3AED;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-dark to-dark-light text-gray-200 font-inter">
+
+<!-- ================= HEADER ================= -->
+<header class="sticky top-0 w-full z-40 backdrop-blur-md bg-dark/80">
+  <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="index.html" class="font-bold text-white text-xl group">
+      <span class="text-white group-hover:text-accent transition-colors duration-300">← Volver al Portfolio</span>
+    </a>
+    
+    <div class="flex items-center space-x-4">
+      <span class="text-sm text-gray-400 hidden md:block">Análisis del Sistema TuPedido</span>
+    </div>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="pt-24 pb-16 relative overflow-hidden">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center opacity-0 animate-fade-in">
+      <h1 class="text-4xl md:text-5xl font-poppins font-bold mb-6">
+        Análisis: <span class="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">Sistema TuPedido</span>
+      </h1>
+      
+      <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+        Sistema integral para gestión de panadería artesanal<br>
+        <span class="text-gray-400">Del problema manual a la solución digital</span>
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        <div class="bg-dark-light/50 rounded-full px-6 py-2">
+          <span class="text-accent">📋</span>
+          <span class="ml-2">Análisis Funcional Completo</span>
+        </div>
+        <div class="bg-dark-light/50 rounded-full px-6 py-2">
+          <span class="text-primary">🔧</span>
+          <span class="ml-2">Metodología SCRUM</span>
+        </div>
+        <div class="bg-dark-light/50 rounded-full px-6 py-2">
+          <span class="text-secondary">📊</span>
+          <span class="ml-2">Documentación Confluence</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Navegación interna -->
+    <div class="mt-12 flex flex-wrap justify-center gap-4">
+      <a href="#contexto" class="tab-button bg-dark-light/50 px-6 py-3 rounded-lg border border-gray-800 hover:border-accent">
+        <i class="fas fa-search mr-2 text-accent"></i>
+        Contexto
+      </a>
+      <a href="#modulos" class="tab-button bg-dark-light/50 px-6 py-3 rounded-lg border border-gray-800 hover:border-primary">
+        <i class="fas fa-cubes mr-2 text-primary"></i>
+        Módulos
+      </a>
+      <a href="#requerimientos" class="tab-button bg-dark-light/50 px-6 py-3 rounded-lg border border-gray-800 hover:border-secondary">
+        <i class="fas fa-list-check mr-2 text-secondary"></i>
+        Requerimientos
+      </a>
+      <a href="#modelado" class="tab-button bg-dark-light/50 px-6 py-3 rounded-lg border border-gray-800 hover:border-accent">
+        <i class="fas fa-project-diagram mr-2 text-accent"></i>
+        Modelado
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTEXTO ================= -->
+<section id="contexto" class="py-16 analysis-section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12 opacity-0 animate-slide-up">
+      <h2 class="text-3xl font-poppins font-bold mb-4">
+        <span class="text-accent">01.</span> El Problema
+      </h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">
+        ¿Cómo gestionar una panadería artesanal con procesos manuales?
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.2s">
+        <div class="module-card p-8 h-full">
+          <div class="text-red-400 text-3xl mb-6">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-4">Situación Inicial</h3>
+          <ul class="space-y-3 text-gray-300">
+            <li class="flex items-start">
+              <i class="fas fa-times text-red-400 mt-1 mr-3"></i>
+              <span>Control manual de producción diaria</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-times text-red-400 mt-1 mr-3"></i>
+              <span>Stock de insumos en papeles y planillas</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-times text-red-400 mt-1 mr-3"></i>
+              <span>Pedidos tomados por teléfono/whatsapp</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-times text-red-400 mt-1 mr-3"></i>
+              <span>Sin métricas para tomar decisiones</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.4s">
+        <div class="module-card p-8 h-full">
+          <div class="text-green-400 text-3xl mb-6">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-4">Solución Propuesta</h3>
+          <ul class="space-y-3 text-gray-300">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-400 mt-1 mr-3"></i>
+              <span>Sistema centralizado de gestión</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-400 mt-1 mr-3"></i>
+              <span>Automatización de producción → stock</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-400 mt-1 mr-3"></i>
+              <span>Pedidos digitales con seguimiento</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-400 mt-1 mr-3"></i>
+              <span>Dashboard con métricas en tiempo real</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-400 mt-1 mr-3"></i>
+              <span>Catálogo web para clientes</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-12 opacity-0 animate-slide-up" style="animation-delay: 0.6s">
+      <div class="bg-dark-light/30 rounded-2xl p-8 border border-gray-800">
+        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+          <i class="fas fa-bullseye mr-3 text-accent"></i>
+          Objetivo del Proyecto
+        </h3>
+        <p class="text-gray-300">
+          Crear un sistema que permita a panaderías artesanales digitalizar sus procesos, 
+          pasar del control manual a la gestión automatizada, y tener datos concretos 
+          para mejorar decisiones de producción, compras y ventas.
+        </p>
+        <div class="mt-6 pt-6 border-t border-gray-800">
+          <p class="text-sm text-gray-400">
+            <strong>Metodología:</strong> SCRUM con sprints de 2 semanas<br>
+            <strong>Herramientas:</strong> Confluence (documentación) + Jira (seguimiento)<br>
+            <strong>Stack técnico:</strong> Laravel, MySQL, Livewire, Alpine.js
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MÓDULOS ================= -->
+<section id="modulos" class="py-16 analysis-section bg-dark/30">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12 opacity-0 animate-slide-up">
+      <h2 class="text-3xl font-poppins font-bold mb-4">
+        <span class="text-primary">02.</span> Módulos Principales
+      </h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">
+        7 módulos interconectados para gestión completa
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Módulo 1 -->
+      <div class="module-card p-6 opacity-0 animate-slide-up" style="animation-delay: 0.2s">
+        <div class="text-blue-400 text-2xl mb-4">
+          <i class="fas fa-industry"></i>
+        </div>
+        <h4 class="text-lg font-semibold text-white mb-3">Producción</h4>
+        <p class="text-gray-400 text-sm mb-4">
+          Registro diario de producción con impacto automático en stock
+        </p>
+        <div class="req-badge req-functional">CRUD Producción</div>
+        <div class="req-badge req-functional">Consulta por fechas</div>
+      </div>
+      
+      <!-- Módulo 2 -->
+      <div class="module-card p-6 opacity-0 animate-slide-up" style="animation-delay: 0.3s">
+        <div class="text-green-400 text-2xl mb-4">
+          <i class="fas fa-boxes"></i>
+        </div>
+        <h4 class="text-lg font-semibold text-white mb-3">Inventario</h4>
+        <p class="text-gray-400 text-sm mb-4">
+          Gestión de productos, insumos y alertas de stock bajo
+        </p>
+        <div class="req-badge req-functional">CRUD Productos</div>
+        <div class="req-badge req-functional">Alertas stock</div>
+        <div class="req-badge req-functional">CRUD Insumos</div>
+      </div>
+      
+      <!-- Módulo 3 -->
+      <div class="module-card p-6 opacity-0 animate-slide-up" style="animation-delay: 0.4s">
+        <div class="text-purple-400 text-2xl mb-4">
+          <i class="fas fa-shopping-cart"></i>
+        </div>
+        <h4 class="text-lg font-semibold text-white mb-3">Pedidos & Ventas</h4>
+        <p class="text-gray-400 text-sm mb-4">
+          Sistema completo de pedidos presenciales y a domicilio
+        </p>
+        <div class="req-badge req-functional">CRUD Pedidos</div>
+        <div class="req-badge req-functional">Estados de entrega</div>
+        <div class="req-badge req-functional">Consulta por fecha</div>
+      </div>
+      
+      <!-- Módulo 4 -->
+      <div class="module-card p-6 opacity-0 animate-slide-up" style="animation-delay: 0.5s">
+        <div class="text-yellow-400 text-2xl mb-4">
+          <i class="fas fa-truck"></i>
+        </div>
+        <h4 class="text-lg font-semibold text-white mb-3">Compras</h4>
+        <p class="text-gray-400 text-sm mb-4">
+          Gestión de compras a proveedores con seguimiento de estado
+        </p>
+        <div class="req-badge req-functional">CRUD Proveedores</div>
+        <div class="req-badge req-functional">Órdenes de compra</div>
+        <div class="req-badge req-functional">Estados compras</div>
+      </div>
+      
+      <!-- Módulo 5 -->
+      <div class="module-card p-6 opacity-0 animate-slide-up" style="animation-delay: 0.6s">
+        <div class="text-red-400 text-2xl mb-4">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h4 class="text-lg font-semibold text-white mb-3">Reportes</h4>
+        <p class="text-gray-400 text-sm mb-4">
+          Dashboard con métricas KPIs y gráficos para toma de decisiones
+        </p>
+        <div class="req-badge req-functional">Top productos vendidos</div>
+        <div class="req-badge req-functional">Gasto por proveedor</div>
+        <div class="req-badge req-functional">Métricas generales</div>
+      </div>
+      
+      <!-- Módulo 6 -->
+      <div class="module-card p-6 opacity-0 animate-slide-up" style="animation-delay: 0.7s">
+        <div class="text-cyan-400 text-2xl mb-4">
+          <i class="fas fa-globe"></i>
+        </div>
+        <h4 class="text-lg font-semibold text-white mb-3">Web Pública</h4>
+        <p class="text-gray-400 text-sm mb-4">
+          Catálogo online para que clientes vean productos y promociones
+        </p>
+        <div class="req-badge req-functional">Info del local</div>
+        <div class="req-badge req-functional">Catálogo productos</div>
+        <div class="req-badge req-functional">Búsqueda por categoría</div>
+      </div>
+    </div>
+    
+    <div class="mt-12 text-center opacity-0 animate-slide-up" style="animation-delay: 0.8s">
+      <p class="text-gray-300 max-w-3xl mx-auto">
+        Cada módulo se diseñó tras analizar los procesos reales de la panadería, 
+        priorizando <span class="text-accent">automatización</span> donde había trabajo manual 
+        y <span class="text-primary">visibilidad</span> donde había falta de información.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REQUERIMIENTOS ================= -->
+<section id="requerimientos" class="py-16 analysis-section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12 opacity-0 animate-slide-up">
+      <h2 class="text-3xl font-poppins font-bold mb-4">
+        <span class="text-secondary">03.</span> Requerimientos Clave
+      </h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">
+        Lo esencial que el sistema debe hacer (y cómo debe hacerlo)
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- Funcionales -->
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.2s">
+        <div class="module-card p-8 h-full">
+          <div class="flex items-center mb-6">
+            <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mr-4">
+              <i class="fas fa-check-circle text-accent text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white">Funcionales</h3>
+              <p class="text-gray-400 text-sm">Qué hace el sistema</p>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-medium text-white mb-2">Producción → Stock</h4>
+              <p class="text-gray-400 text-sm">
+                Cuando se registra producción, se aumenta stock de productos y disminuye stock de insumos automáticamente.
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-white mb-2">Alertas Inteligentes</h4>
+              <p class="text-gray-400 text-sm">
+                Alertas automáticas cuando productos o insumos están por debajo del stock mínimo.
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-white mb-2">Estados de Pedidos</h4>
+              <p class="text-gray-400 text-sm">
+                Seguimiento completo: Pendiente → En preparación → En camino → Entregado.
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-white mb-2">Roles y Permisos</h4>
+              <p class="text-gray-400 text-sm">
+                Administrador, Producción, Compras, Vendedor - cada uno con accesos específicos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- No Funcionales -->
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.4s">
+        <div class="module-card p-8 h-full">
+          <div class="flex items-center mb-6">
+            <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mr-4">
+              <i class="fas fa-shield-alt text-secondary text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white">No Funcionales</h3>
+              <p class="text-gray-400 text-sm">Cómo lo hace el sistema</p>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-medium text-white mb-2">Seguridad</h4>
+              <p class="text-gray-400 text-sm">
+                Contraseñas encriptadas, control de sesiones, validación de roles, protección de rutas.
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-white mb-2">Rendimiento</h4>
+              <p class="text-gray-400 text-sm">
+                Reportes en menos de 3 segundos, carga rápida del catálogo, manejo de 1000+ registros.
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-white mb-2">Usabilidad</h4>
+              <p class="text-gray-400 text-sm">
+                Interfaz intuitiva, diseño responsive (móvil + escritorio), navegación sencilla.
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="font-medium text-white mb-2">Compatibilidad</h4>
+              <p class="text-gray-400 text-sm">
+                Navegadores modernos (Chrome, Edge, Firefox), diferentes tamaños de pantalla.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODELADO ================= -->
+<section id="modelado" class="py-16 analysis-section bg-dark/30">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12 opacity-0 animate-slide-up">
+      <h2 class="text-3xl font-poppins font-bold mb-4">
+        <span class="text-accent">04.</span> Modelado del Sistema
+      </h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">
+        Estructura conceptual y técnica para asegurar una implementación sólida
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- Modelo de Dominio -->
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.2s">
+        <div class="module-card p-8 h-full">
+          <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+            <i class="fas fa-project-diagram text-accent mr-3"></i>
+            Modelo de Dominio
+          </h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-accent/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-user text-accent text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Actores Principales</h4>
+                <p class="text-gray-400 text-sm">Panadero, Vendedor, Administrador, Cliente (web)</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-primary/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-box text-primary text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Entidades Clave</h4>
+                <p class="text-gray-400 text-sm">Producto, Insumo, Pedido, Venta, Producción, Proveedor</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-secondary/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-exchange-alt text-secondary text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Relaciones</h4>
+                <p class="text-gray-400 text-sm">Producción afecta Productos e Insumos, Pedidos generan Ventas</p>
+              </div>
+            </div>
+            
+            <div class="mt-8">
+              <div class="bg-dark p-6 rounded-lg border border-gray-800">
+                <div class="text-center text-gray-400">
+                  <i class="fas fa-image text-3xl mb-4"></i>
+                  <p class="text-sm">Diagrama de Casos de Uso</p>
+                  <p class="text-xs text-gray-500 mt-2">(Imagen del análisis real)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Base de Datos -->
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.4s">
+        <div class="module-card p-8 h-full">
+          <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+            <i class="fas fa-database text-primary mr-3"></i>
+            Base de Datos
+          </h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-green-500/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-table text-green-500 text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Tablas Principales</h4>
+                <p class="text-gray-400 text-sm">17 tablas normalizadas para evitar redundancia</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-yellow-500/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-key text-yellow-500 text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Claves y Relaciones</h4>
+                <p class="text-gray-400 text-sm">Foreign keys para integridad referencial</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-purple-500/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-chart-bar text-purple-500 text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Índices Optimizados</h4>
+                <p class="text-gray-400 text-sm">Para búsquedas rápidas en reportes y consultas</p>
+              </div>
+            </div>
+            
+            <div class="mt-8">
+              <div class="bg-dark p-6 rounded-lg border border-gray-800">
+                <div class="text-center text-gray-400">
+                  <i class="fas fa-diagram-project text-3xl mb-4"></i>
+                  <p class="text-sm">Diagrama Entidad-Relación (ER)</p>
+                  <p class="text-xs text-gray-500 mt-2">(Imagen del modelo real)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Decisiones Técnicas -->
+    <div class="mt-12 opacity-0 animate-slide-up" style="animation-delay: 0.6s">
+      <div class="module-card p-8">
+        <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+          <i class="fas fa-cogs text-secondary mr-3"></i>
+          Decisiones Técnicas
+        </h3>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="tech-decision">
+            <div class="tech-icon bg-red-500/20 text-red-400">
+              <i class="fab fa-laravel"></i>
+            </div>
+            <h4 class="font-medium text-white mt-4 mb-2">Laravel</h4>
+            <p class="text-gray-400 text-sm">
+              Framework robusto que acelera desarrollo manteniendo buenas prácticas
+            </p>
+          </div>
+          
+          <div class="tech-decision">
+            <div class="tech-icon bg-blue-500/20 text-blue-400">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <h4 class="font-medium text-white mt-4 mb-2">Livewire</h4>
+            <p class="text-gray-400 text-sm">
+              Interfaz reactiva sin complejidad de JavaScript, ideal para CRUDs
+            </p>
+          </div>
+          
+          <div class="tech-decision">
+            <div class="tech-icon bg-green-500/20 text-green-400">
+              <i class="fas fa-database"></i>
+            </div>
+            <h4 class="font-medium text-white mt-4 mb-2">MySQL</h4>
+            <p class="text-gray-400 text-sm">
+              Base de datos relacional confiable para datos estructurados
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="py-16">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <div class="module-card p-12 opacity-0 animate-slide-up" style="animation-delay: 0.3s">
+      <h2 class="text-3xl font-poppins font-bold mb-6">
+        ¿Necesitás un análisis similar para tu proyecto?
+      </h2>
+      
+      <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
+        Este nivel de detalle y estructura es lo que aplico a cada proyecto. 
+        Primero entendemos el problema, luego diseñamos la solución.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="index.html#contact" class="btn-primary group">
+          <i class="fas fa-envelope mr-2"></i>
+          Conversemos sobre tu proyecto
+        </a>
+        <a href="index.html" class="btn-secondary group">
+          <i class="fas fa-arrow-left mr-2"></i>
+          Volver al portfolio
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-dark py-12 border-t border-gray-800">
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <div class="flex justify-center space-x-6 mb-6">
+      <a href="https://github.com/juanma-aguirre" target="_blank" class="social-icon">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://linkedin.com/in/juanma-aguirre" target="_blank" class="social-icon">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </div>
+    
+    <p class="text-gray-500">
+      Análisis del Sistema TuPedido | Juanma Aguirre
+    </p>
+    <p class="text-gray-600 text-sm mt-2">
+      Analista de Sistemas & Desarrollador Full Stack Laravel
+    </p>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Navegación suave
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        
+        if (targetId === '#') return;
+        
+        e.preventDefault();
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Animaciones al hacer scroll
+    function animateOnScroll() {
+      const elements = document.querySelectorAll('.opacity-0');
+      
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 100;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.style.opacity = '1';
+          element.style.transform = 'translateY(0)';
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', animateOnScroll);
+    setTimeout(animateOnScroll, 100);
+  });
+</script>
+</body>
+</html>
