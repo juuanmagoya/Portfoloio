@@ -15,6 +15,9 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- Lightbox para imágenes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+
   <!-- Tailwind Config -->
   <script>
     tailwind.config = {
@@ -35,6 +38,7 @@
           animation: {
             'fade-in': 'fadeIn 0.8s ease-out forwards',
             'slide-up': 'slideUp 0.8s ease-out forwards',
+            'fade-in-up': 'fadeInUp 0.5s ease-out forwards'
           },
           keyframes: {
             fadeIn: {
@@ -43,6 +47,10 @@
             },
             slideUp: {
               '0%': { opacity: '0', transform: 'translateY(30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
               '100%': { opacity: '1', transform: 'translateY(0)' }
             }
           }
@@ -94,6 +102,295 @@
     .req-non-functional {
       background: rgba(124, 58, 237, 0.2);
       color: #7C3AED;
+    }
+    
+    .image-gallery-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+    
+    .main-image-container {
+      width: 100%;
+      height: 250px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .main-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    
+    .main-image-container:hover img {
+      transform: scale(1.02);
+    }
+    
+    .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      overflow-x: auto;
+      padding: 5px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(6, 182, 212, 0.5) rgba(30, 41, 59, 0.3);
+    }
+    
+    .thumbnail-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .thumbnail-container::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.3);
+      border-radius: 3px;
+    }
+    
+    .thumbnail-container::-webkit-scrollbar-thumb {
+      background: rgba(6, 182, 212, 0.5);
+      border-radius: 3px;
+    }
+    
+    .thumbnail {
+      flex: 0 0 auto;
+      width: 80px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+    }
+    
+    .thumbnail:hover {
+      opacity: 0.8;
+      transform: translateY(-2px);
+    }
+    
+    .thumbnail.active {
+      border-color: #06B6D4;
+      opacity: 1;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+    }
+    
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .gallery-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .gallery-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .gallery-btn:hover {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: #06B6D4;
+      transform: scale(1.1);
+    }
+    
+    .gallery-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .gallery-btn:disabled:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .image-counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 20px;
+      padding: 5px 15px;
+      font-size: 0.9rem;
+      color: #06B6D4;
+      font-weight: 500;
+    }
+    
+    .tech-decision {
+      text-align: center;
+    }
+    
+    .tech-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      font-size: 24px;
+    }
+    
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      background: rgba(6, 182, 212, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #06B6D4, #2563EB);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      text-decoration: none;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+    }
+    
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-decoration: none;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+    
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+    }
+    
+    .modal-img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      color: #06B6D4;
+    }
+    
+    .image-placeholder {
+      width: 100%;
+      height: 200px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .image-placeholder:hover {
+      border-color: rgba(6, 182, 212, 0.5);
+      background: rgba(30, 41, 59, 0.7);
+    }
+    
+    .image-preview {
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .image-preview:hover {
+      border-color: rgba(6, 182, 212, 0.5);
+      transform: scale(1.01);
+    }
+    
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -251,7 +548,7 @@
           <p class="text-sm text-gray-400">
             <strong>Metodología:</strong> SCRUM con sprints de 2 semanas<br>
             <strong>Herramientas:</strong> Confluence (documentación) + Jira (seguimiento)<br>
-            <strong>Stack técnico:</strong> Laravel, MySQL, Livewire, Alpine.js
+            <strong>Stack técnico:</strong> Laravel, Tailwind, MySQL, Livewire, Alpine.js
           </p>
         </div>
       </div>
@@ -484,8 +781,8 @@
       </p>
     </div>
     
-    <div class="grid md:grid-cols-2 gap-8">
-      <!-- Modelo de Dominio -->
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Modelo de Dominio (Diagrama de Clases) -->
       <div class="opacity-0 animate-slide-up" style="animation-delay: 0.2s">
         <div class="module-card p-8 h-full">
           <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
@@ -497,10 +794,6 @@
             <div class="flex items-start">
               <div class="w-8 h-8 bg-accent/20 rounded flex items-center justify-center mr-3 mt-1">
                 <i class="fas fa-user text-accent text-sm"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-white">Actores Principales</h4>
-                <p class="text-gray-400 text-sm">Panadero, Vendedor, Administrador, Cliente (web)</p>
               </div>
             </div>
             
@@ -526,23 +819,25 @@
             
             <div class="mt-8">
               <div class="bg-dark p-6 rounded-lg border border-gray-800">
-                <div class="text-center text-gray-400">
-                  <i class="fas fa-image text-3xl mb-4"></i>
-                  <p class="text-sm">Diagrama de Casos de Uso</p>
-                  <p class="text-xs text-gray-500 mt-2">(Imagen del análisis real)</p>
-                </div>
+                <a href="assets/images/UMLTUPClasesActualizado.png" data-lightbox="modelado" data-title="Modelo de Dominio - Diagrama de Clases" class="image-preview-link">
+                  <div class="image-preview">
+                    <img src="assets/images/UMLTUPClasesActualizado.png" alt="Diagrama de Clases del Sistema TuPedido" onerror="this.src='https://via.placeholder.com/400x200/1E293B/06B6D4?text=Diagrama+de+Clases'">
+                  </div>
+                </a>
+                <p class="text-center text-gray-400 text-sm mt-4">Diagrama de Clases del Sistema TuPedido</p>
+                <p class="text-center text-gray-500 text-xs mt-2">(Haz clic para ampliar)</p>
               </div>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Base de Datos -->
+      <!-- Modelo de Datos -->
       <div class="opacity-0 animate-slide-up" style="animation-delay: 0.4s">
         <div class="module-card p-8 h-full">
           <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
             <i class="fas fa-database text-primary mr-3"></i>
-            Base de Datos
+            Modelo de Datos
           </h3>
           
           <div class="space-y-4">
@@ -578,11 +873,91 @@
             
             <div class="mt-8">
               <div class="bg-dark p-6 rounded-lg border border-gray-800">
-                <div class="text-center text-gray-400">
-                  <i class="fas fa-diagram-project text-3xl mb-4"></i>
-                  <p class="text-sm">Diagrama Entidad-Relación (ER)</p>
-                  <p class="text-xs text-gray-500 mt-2">(Imagen del modelo real)</p>
+                <a href="assets/images/modelo_datos_tupedido.png" data-lightbox="modelado" data-title="Modelo de Datos - Diagrama Entidad-Relación" class="image-preview-link">
+                  <div class="image-preview">
+                    <img src="assets/images/modelo_datos_tupedido.png" alt="Diagrama Entidad-Relación del Sistema TuPedido" onerror="this.src='https://via.placeholder.com/400x200/1E293B/7C3AED?text=Diagrama+ER'">
+                  </div>
+                </a>
+                <p class="text-center text-gray-400 text-sm mt-4">Diagrama Entidad-Relación (ER)</p>
+                <p class="text-center text-gray-500 text-xs mt-2">(Haz clic para ampliar)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Diagrama de Casos de Uso -->
+      <div class="opacity-0 animate-slide-up" style="animation-delay: 0.6s">
+        <div class="module-card p-8 h-full">
+          <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+            <i class="fas fa-users text-secondary mr-3"></i>
+            Diagrama de Casos de Uso
+          </h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-blue-500/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-user-tie text-blue-500 text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Actores</h4>
+                <p class="text-gray-400 text-sm">Administrador, Producción, Ventas, Cliente</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-pink-500/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-tasks text-pink-500 text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Casos de Uso</h4>
+                <p class="text-gray-400 text-sm">Principal: Gestionar pedidos, stock, producción</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="w-8 h-8 bg-indigo-500/20 rounded flex items-center justify-center mr-3 mt-1">
+                <i class="fas fa-sitemap text-indigo-500 text-sm"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-white">Relaciones</h4>
+                <p class="text-gray-400 text-sm">Inclusión, Extensión, Generalización</p>
+              </div>
+            </div>
+            
+            <div class="mt-8">
+              <div class="bg-dark p-6 rounded-lg border border-gray-800">
+                <!-- Galería de imágenes de casos de uso -->
+                <div class="image-gallery-container">
+                  <!-- Imagen principal -->
+                  <div class="main-image-container">
+                    <a href="assets/images/CU_Compras.png" data-lightbox="casos-uso" data-title="Diagrama de Casos de Uso - Compras" class="main-image-link">
+                      <img id="mainImage" src="assets/images/CU_Compras.png" alt="Diagrama de Casos de Uso" onerror="this.src='https://via.placeholder.com/600x250/1E293B/FFFFFF?text=Casos+de+Uso'">
+                    </a>
+                  </div>
+                  
+                  <!-- Controles de navegación -->
+                  <div class="gallery-controls">
+                    <button class="gallery-btn prev-btn" id="prevBtn" disabled>
+                      <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <div class="image-counter">
+                      <span id="currentImage">1</span> / <span id="totalImages">5</span>
+                    </div>
+                    
+                    <button class="gallery-btn next-btn" id="nextBtn">
+                      <i class="fas fa-chevron-right"></i>
+                    </button>
+                  </div>
+                  
+                  <!-- Miniaturas -->
+                  <div class="thumbnail-container" id="thumbnailContainer">
+                    <!-- Las miniaturas se generarán dinámicamente con JavaScript -->
+                  </div>
                 </div>
+                
+                <p class="text-center text-gray-500 text-xs mt-4">(Haz clic en la imagen principal para ampliar)</p>
               </div>
             </div>
           </div>
@@ -591,7 +966,7 @@
     </div>
     
     <!-- Decisiones Técnicas -->
-    <div class="mt-12 opacity-0 animate-slide-up" style="animation-delay: 0.6s">
+    <div class="mt-12 opacity-0 animate-slide-up" style="animation-delay: 0.8s">
       <div class="module-card p-8">
         <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
           <i class="fas fa-cogs text-secondary mr-3"></i>
@@ -682,8 +1057,29 @@
   </div>
 </footer>
 
+<!-- Modal para imágenes -->
+<div id="imageModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="modal-close" id="closeModal">&times;</button>
+    <img id="modalImage" class="modal-img" src="" alt="">
+    <p id="modalCaption" class="text-white text-center mt-4"></p>
+  </div>
+</div>
+
+<!-- Lightbox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.min.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Configurar Lightbox
+    lightbox.option({
+      'resizeDuration': 200,
+      'wrapAround': true,
+      'albumLabel': 'Imagen %1 de %2',
+      'fadeDuration': 300,
+      'imageFadeDuration': 300
+    });
+    
     // Navegación suave
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
@@ -720,6 +1116,200 @@
     
     window.addEventListener('scroll', animateOnScroll);
     setTimeout(animateOnScroll, 100);
+    
+    // Sistema de galería para casos de uso
+    const galleryImages = [
+      {
+        src: 'assets/images/CU_Compras.png',
+        title: 'Diagrama de Casos de Uso - Módulo Compras',
+        alt: 'Casos de Uso - Compras',
+        thumbnail: 'assets/images/CU_Compras.png'
+      },
+      {
+        src: 'assets/images/CU_Insumos_produccion.png',
+        title: 'Diagrama de Casos de Uso - Módulo Insumos y Producción',
+        alt: 'Casos de Uso - Insumos y Producción',
+        thumbnail: 'assets/images/CU_Insumos_produccion.png'
+      },
+      {
+        src: 'assets/images/CU_reportes.png',
+        title: 'Diagrama de Casos de Uso - Módulo Reportes',
+        alt: 'Casos de Uso - Reportes',
+        thumbnail: 'assets/images/CU_reportes.png'
+      },
+      {
+        src: 'assets/images/CU_UserTUP.png',
+        title: 'Diagrama de Casos de Uso - Usuarios y Permisos',
+        alt: 'Casos de Uso - Usuarios',
+        thumbnail: 'assets/images/CU_UserTUP.png'
+      },
+      {
+        src: 'assets/images/CU_web.png',
+        title: 'Diagrama de Casos de Uso - Web Pública',
+        alt: 'Casos de Uso - Web',
+        thumbnail: 'assets/images/CU_web.png'
+      }
+    ];
+    
+    // Elementos de la galería
+    const mainImage = document.getElementById('mainImage');
+    const mainImageLink = document.querySelector('.main-image-link');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const currentImageSpan = document.getElementById('currentImage');
+    const totalImagesSpan = document.getElementById('totalImages');
+    const thumbnailContainer = document.getElementById('thumbnailContainer');
+    
+    let currentIndex = 0;
+    
+    // Inicializar galería
+    function initGallery() {
+      totalImagesSpan.textContent = galleryImages.length;
+      updateGallery();
+      createThumbnails();
+      
+      // Verificar si las imágenes existen
+      checkImages();
+    }
+    
+    // Crear miniaturas
+    function createThumbnails() {
+      thumbnailContainer.innerHTML = '';
+      
+      galleryImages.forEach((image, index) => {
+        const thumbnail = document.createElement('div');
+        thumbnail.className = `thumbnail ${index === currentIndex ? 'active' : ''}`;
+        thumbnail.dataset.index = index;
+        
+        const img = document.createElement('img');
+        img.src = image.thumbnail;
+        img.alt = image.alt;
+        img.onerror = function() {
+          this.src = 'https://via.placeholder.com/80x60/1E293B/FFFFFF?text=' + (index + 1);
+        };
+        
+        thumbnail.appendChild(img);
+        thumbnail.addEventListener('click', () => {
+          currentIndex = index;
+          updateGallery();
+        });
+        
+        thumbnailContainer.appendChild(thumbnail);
+      });
+    }
+    
+    // Actualizar galería
+    function updateGallery() {
+      const currentImage = galleryImages[currentIndex];
+      
+      // Actualizar imagen principal
+      mainImage.src = currentImage.src;
+      mainImage.alt = currentImage.alt;
+      mainImage.onerror = function() {
+        this.src = 'https://via.placeholder.com/600x250/1E293B/FFFFFF?text=' + currentImage.title;
+      };
+      
+      // Actualizar enlace de Lightbox
+      mainImageLink.href = currentImage.src;
+      mainImageLink.setAttribute('data-title', currentImage.title);
+      
+      // Actualizar contador
+      currentImageSpan.textContent = currentIndex + 1;
+      
+      // Actualizar botones
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === galleryImages.length - 1;
+      
+      // Actualizar miniaturas activas
+      document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+        if (index === currentIndex) {
+          thumb.classList.add('active');
+        } else {
+          thumb.classList.remove('active');
+        }
+      });
+      
+      // Actualizar Lightbox
+      if (window.lightbox) {
+        // Re-inicializar lightbox con las nuevas imágenes
+        lightbox.init();
+      }
+    }
+    
+    // Verificar si las imágenes existen
+    function checkImages() {
+      galleryImages.forEach((image, index) => {
+        const img = new Image();
+        img.onerror = function() {
+          console.warn(`Imagen no encontrada: ${image.src}`);
+          galleryImages[index].src = 'https://via.placeholder.com/600x250/1E293B/FFFFFF?text=Imagen+' + (index + 1);
+          galleryImages[index].thumbnail = 'https://via.placeholder.com/80x60/1E293B/FFFFFF?text=' + (index + 1);
+          
+          if (index === currentIndex) {
+            updateGallery();
+          }
+        };
+        img.src = image.src;
+      });
+    }
+    
+    // Event listeners para botones
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateGallery();
+      }
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < galleryImages.length - 1) {
+        currentIndex++;
+        updateGallery();
+      }
+    });
+    
+    // Navegación con teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateGallery();
+        }
+      } else if (e.key === 'ArrowRight') {
+        if (currentIndex < galleryImages.length - 1) {
+          currentIndex++;
+          updateGallery();
+        }
+      }
+    });
+    
+    // Inicializar galería
+    initGallery();
+    
+    // Sistema de modal para imágenes (backup si no funciona lightbox)
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    const closeModal = document.getElementById('closeModal');
+    
+    // Cerrar modal al hacer clic fuera
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+    
+    // Cerrar modal con botón
+    closeModal.addEventListener('click', function() {
+      modal.classList.remove('active');
+    });
+    
+    // Cerrar modal con Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+      }
+    });
   });
 </script>
 </body>
