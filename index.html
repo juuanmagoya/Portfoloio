@@ -568,32 +568,74 @@
     <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
       <!-- Formulario -->
         <div class="contact-form-container opacity-0 animate-slide-up" style="animation-delay: 0.2s">
-          <form id="contactForm" class="space-y-6">
-          <div class="form-group">
-            <label for="name" class="form-label">Nombre</label>
-            <input type="text" id="name" class="form-input" placeholder="Tu nombre" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" class="form-input" placeholder="tu@email.com" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="subject" class="form-label">Asunto</label>
-            <input type="text" id="subject" class="form-input" placeholder="¿En qué puedo ayudarte?" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="message" class="form-label">Mensaje</label>
-            <textarea id="message" class="form-input h-40" placeholder="Contame sobre tu proyecto o consulta..." required></textarea>
-          </div>
-          
-          <button type="submit" class="btn-primary w-full group">
-            <span>Enviar mensaje</span>
-            <i class="fas fa-paper-plane ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
-          </button>
-        </form> 
+          <form 
+              id="contactForm" 
+              action="https://formspree.io/f/mykjplnp" 
+              method="POST"
+              class="space-y-6"
+            >
+              <!-- Mensaje de éxito (inicialmente oculto) -->
+              <div id="successMessage" class="hidden p-4 mb-4 rounded-lg bg-green-50 border border-green-200">
+                <div class="flex items-center">
+                  <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                  <div>
+                    <p class="font-medium text-green-800">¡Mensaje enviado con éxito!</p>
+                    <p class="text-sm text-green-600 mt-1">Te responderé a la brevedad.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mensaje de error (inicialmente oculto) -->
+              <div id="errorMessage" class="hidden p-4 mb-4 rounded-lg bg-red-50 border border-red-200">
+                <div class="flex items-center">
+                  <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                  <div>
+                    <p class="font-medium text-red-800">Hubo un error al enviar</p>
+                    <p class="text-sm text-red-600 mt-1">Por favor, intentá nuevamente.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Tu nombre" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="tu@email.com" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="subject" class="form-label">Asunto</label>
+                <input type="text" id="subject" name="_subject" class="form-input" placeholder="¿En qué puedo ayudarte?" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="message" class="form-label">Mensaje</label>
+                <textarea id="message" name="message" class="form-input h-40" placeholder="Contame sobre tu proyecto o consulta..." required></textarea>
+              </div>
+              
+              <!-- Campo oculto para redirección opcional (puedes quitarlo si no lo necesitas) -->
+              <input type="hidden" name="_next" value="https://tudominio.com/gracias">
+              
+              <!-- Campo para evitar spam (recomendado por Formspree) -->
+              <input type="text" name="_gotcha" style="display:none">
+              
+              <button 
+                type="submit" 
+                class="btn-primary w-full group relative"
+                id="submitButton"
+              >
+                <span id="buttonText">Enviar mensaje</span>
+                <i id="buttonIcon" class="fas fa-paper-plane ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                
+                <!-- Spinner de carga -->
+                <div id="spinner" class="hidden absolute inset-0 flex items-center justify-center">
+                  <div class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                </div>
+              </button>
+          </form>
       </div>
       
       <!-- Info de contacto -->
@@ -665,7 +707,7 @@
     </div>
     
     <p class="text-gray-500">
-      © 2024 Juanma Aguirre | Analista de Sistemas & Desarrollador Full Stack Laravel
+        Juanma Aguirre | Analista de Sistemas & Desarrollador Full Stack Laravel
     </p>
     <p class="text-gray-600 text-sm mt-2">
       Transformando análisis en soluciones digitales

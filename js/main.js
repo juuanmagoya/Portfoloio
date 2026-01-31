@@ -101,27 +101,64 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(animateOnScroll, preloaderDuration + 500);
   
   // Formulario de contacto
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Simular envío
-      const submitBtn = this.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
-      
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-      submitBtn.disabled = true;
-      
-      // Simular tiempo de envío
-      setTimeout(() => {
-        alert('¡Mensaje enviado! Te responderé lo antes posible.');
-        contactForm.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      }, 1500);
-    });
-  }
+  const form = document.getElementById('contactForm');
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+  const submitButton = document.getElementById('submitButton');
+  const buttonText = document.getElementById('buttonText');
+  const buttonIcon = document.getElementById('buttonIcon');
+  const spinner = document.getElementById('spinner');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Mostrar estado de carga
+    submitButton.disabled = true;
+    buttonText.textContent = 'Enviando...';
+    buttonIcon.classList.add('hidden');
+    spinner.classList.remove('hidden');
+    
+    // Ocultar mensajes anteriores
+    successMessage.classList.add('hidden');
+    errorMessage.classList.add('hidden');
+    
+    try {
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        // Mostrar mensaje de éxito
+        successMessage.classList.remove('hidden');
+        form.reset(); // Limpiar formulario
+        
+        // Hacer scroll suave al mensaje de éxito
+        successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+          successMessage.classList.add('hidden');
+        }, 5000);
+      } else {
+        throw new Error('Error en el servidor');
+      }
+    } catch (error) {
+      // Mostrar mensaje de error
+      errorMessage.classList.remove('hidden');
+      errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } finally {
+      // Restaurar estado del botón
+      submitButton.disabled = false;
+      buttonText.textContent = 'Enviar mensaje';
+      buttonIcon.classList.remove('hidden');
+      spinner.classList.add('hidden');
+    }
+  });
   
   // Smooth scroll para enlaces internos
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
